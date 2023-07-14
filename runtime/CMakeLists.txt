@@ -107,4 +107,8 @@ if(NOT RMM_ARCH STREQUAL fake_host)
         PROPERTY COMPILE_DEFINITIONS "RMM_NUM_PAGES_PER_STACK=UL(${RMM_NUM_PAGES_PER_STACK})")
 endif()
 
+if(RMM_PRINT_RIM)
+    target_compile_definitions(rmm-runtime PRIVATE RMM_PRINT_RIM)
+endif()
+
 include (tests/CMakeLists.txt)

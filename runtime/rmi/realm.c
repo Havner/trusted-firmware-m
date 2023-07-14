@@ -17,6 +17,18 @@
 #include <string.h>
 #include <table.h>
 #include <vmid.h>
+#include <debug.h>
+
+#ifdef RMM_PRINT_RIM
+static void print_measurement(unsigned char measurement[MAX_MEASUREMENT_SIZE])
+{
+	NOTICE("RIM_MEASUREMENT_SLOT: ");
+	for (int i = 0; i < MAX_MEASUREMENT_SIZE; ++i) {
+		NOTICE("%02X", measurement[i]);
+	}
+	NOTICE("\n");
+}
+#endif
 
 unsigned long smc_realm_activate(unsigned long rd_addr)
 {
@@ -31,6 +43,9 @@ unsigned long smc_realm_activate(unsigned long rd_addr)
 
 	rd = granule_map(g_rd, SLOT_RD);
 	if (get_rd_state_locked(rd) == REALM_STATE_NEW) {
+#ifdef RMM_PRINT_RIM
+		print_measurement(rd->measurement[RIM_MEASUREMENT_SLOT]);
+#endif
 		set_rd_state(rd, REALM_STATE_ACTIVE);
 		ret = RMI_SUCCESS;
 	} else {
